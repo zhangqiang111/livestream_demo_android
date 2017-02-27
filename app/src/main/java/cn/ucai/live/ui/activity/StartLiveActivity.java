@@ -24,7 +24,7 @@ import cn.ucai.live.data.model.LiveRoom;
 import cn.ucai.live.data.model.LiveSettings;
 import cn.ucai.live.utils.Log2FileUtil;
 
-import com.easemob.livedemo.R;
+import cn.ucai.live.R;
 import cn.ucai.live.data.TestDataRepository;
 
 import com.hyphenate.EMValueCallBack;

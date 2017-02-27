@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
-import com.easemob.livedemo.R;
+import cn.ucai.live.R;
 import com.ucloud.live.UEasyStreaming;
 
 

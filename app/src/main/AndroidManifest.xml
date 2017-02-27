@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.easemob.livedemo">
+    package="cn.ucai.live">
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,18 +14,18 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 
     <application
-        android:name=".DemoApplication"
+        android:name="cn.ucai.live.DemoApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name="cn.ucai.live.ui.activity.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.LoginActivity"
+            android:name="cn.ucai.live.ui.activity.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,35 +35,35 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.LiveDetailsActivity"
-            android:parentActivityName=".ui.activity.MainActivity"
+            android:name="cn.ucai.live.ui.activity.LiveDetailsActivity"
+            android:parentActivityName="cn.ucai.live.ui.activity.MainActivity"
             android:screenOrientation="portrait"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.MainActivity" />
+                android:value="cn.ucai.live.ui.activity.MainActivity" />
         </activity>
 
-        <activity android:name=".ui.activity.ChatActivity"
+        <activity android:name="cn.ucai.live.ui.activity.ChatActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
             />
         <activity
-            android:name=".ui.activity.StartLiveActivity"
-            android:parentActivityName=".ui.activity.MainActivity"
+            android:name="cn.ucai.live.ui.activity.StartLiveActivity"
+            android:parentActivityName="cn.ucai.live.ui.activity.MainActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.MainActivity" />
+                android:value="cn.ucai.live.ui.activity.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.activity.RegisterActivity"
-            android:parentActivityName=".ui.activity.LoginActivity"
+            android:name="cn.ucai.live.ui.activity.RegisterActivity"
+            android:parentActivityName="cn.ucai.live.ui.activity.LoginActivity"
             android:screenOrientation="portrait" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.LoginActivity" />
-        <activity android:name=".ui.activity.SearchActivity"></activity>
+                android:value="cn.ucai.live.ui.activity.LoginActivity" />
+        <activity android:name="cn.ucai.live.ui.activity.SearchActivity"></activity>
 
 
         <!-- 设置环信应用的appkey -->

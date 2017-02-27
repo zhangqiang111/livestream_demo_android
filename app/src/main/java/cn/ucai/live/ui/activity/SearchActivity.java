@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.easemob.livedemo.R;
+import cn.ucai.live.R;
 import cn.ucai.live.data.TestDataRepository;
 import java.util.ArrayList;
 import java.util.List;

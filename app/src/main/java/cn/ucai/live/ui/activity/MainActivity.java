@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.easemob.livedemo.R;
+import cn.ucai.live.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

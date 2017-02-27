@@ -1,6 +1,6 @@
 package cn.ucai.live.data;
 
-import com.easemob.livedemo.R;
+import cn.ucai.live.R;
 import cn.ucai.live.data.model.LiveRoom;
 
 import java.util.ArrayList;

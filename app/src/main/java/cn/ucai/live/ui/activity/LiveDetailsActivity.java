@@ -12,7 +12,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.easemob.livedemo.R;
+import cn.ucai.live.R;
 import cn.ucai.live.data.model.LiveRoom;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMChatRoom;

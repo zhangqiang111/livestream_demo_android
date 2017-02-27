@@ -6,7 +6,7 @@ android {
   buildToolsVersion "23.0.3"
 
   defaultConfig {
-    applicationId "com.easemob.livedemo"
+    applicationId "cn.ucai.live"
     minSdkVersion 15
     targetSdkVersion 22
     versionCode 1
@@ -44,5 +44,9 @@ dependencies {
   compile 'com.android.support:design:23.4.0'
   compile 'com.jakewharton:butterknife:8.0.1'
   compile 'com.github.florent37:viewanimator:1.0.4'
+  compile 'com.squareup.okhttp3:okhttp:3.4.1'
+  compile 'com.squareup.okio:okio:1.10.0'
+  compile 'com.squareup.okhttp3:okhttp-urlconnection:3.4.1'
+  compile 'com.google.code.gson:gson:2.7'
   compile 'com.android.support:support-v4:23.4.0'
 }

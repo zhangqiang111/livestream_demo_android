@@ -14,7 +14,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.ucai.live.data.model.LiveSettings;
 
-import com.easemob.livedemo.R;
+import cn.ucai.live.R;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 

@@ -15,7 +15,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.easemob.livedemo.R;
+import cn.ucai.live.R;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 

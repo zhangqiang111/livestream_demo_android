@@ -9,7 +9,7 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.easemob.livedemo.R;
+import cn.ucai.live.R;
 import com.hyphenate.easeui.widget.EaseImageView;
 
 import butterknife.BindView;

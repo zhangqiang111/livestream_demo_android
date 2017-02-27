@@ -20,7 +20,7 @@ import cn.ucai.live.data.TestAvatarRepository;
 import cn.ucai.live.ui.widget.RoomMessagesView;
 
 import com.bumptech.glide.Glide;
-import com.easemob.livedemo.R;
+import cn.ucai.live.R;
 
 import cn.ucai.live.ui.widget.BarrageLayout;
 import cn.ucai.live.ui.widget.LiveLeftGiftView;
