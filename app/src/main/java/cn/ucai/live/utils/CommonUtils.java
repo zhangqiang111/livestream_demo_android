@@ -2,25 +2,26 @@ package cn.ucai.live.utils;
 
 import android.widget.Toast;
 
-import cn.ucai.superwechat.R;
-import cn.ucai.superwechat.SuperWeChatApplication;
-import cn.ucai.superwechat.widget.I;
+import cn.ucai.live.I;
+import cn.ucai.live.LiveApplication;
+import cn.ucai.live.R;
+
 
 /**
  * Created by clawpo on 16/9/20.
  */
 public class CommonUtils {
     public static void showLongToast(String msg){
-        Toast.makeText(SuperWeChatApplication.getInstance(),msg,Toast.LENGTH_LONG).show();
+        Toast.makeText(LiveApplication.getInstance(),msg,Toast.LENGTH_LONG).show();
     }
     public static void showShortToast(String msg){
-        Toast.makeText(SuperWeChatApplication.getInstance(),msg,Toast.LENGTH_SHORT).show();
+        Toast.makeText(LiveApplication.getInstance(),msg,Toast.LENGTH_SHORT).show();
     }
     public static void showLongToast(int rId){
-        showLongToast(SuperWeChatApplication.getInstance().getString(rId));
+        showLongToast(LiveApplication.getInstance().getString(rId));
     }
     public static void showShortToast(int rId){
-        showShortToast(SuperWeChatApplication.getInstance().getString(rId));
+        showShortToast(LiveApplication.getInstance().getString(rId));
     }
     public static void showLongResultMsg(int msg){
         showLongToast(getMsgString(msg));
@@ -31,18 +32,18 @@ public class CommonUtils {
     private static int getMsgString(int msg){
         int resId = R.string.msg_1;
         if(msg>0){
-            resId = SuperWeChatApplication.getInstance().getResources()
+            resId = LiveApplication.getInstance().getResources()
                     .getIdentifier(I.MSG_PREFIX_MSG+msg,"string",
-                            SuperWeChatApplication.getInstance().getPackageName());
+                            LiveApplication.getInstance().getPackageName());
         }
         return resId;
     }
 
     public static String getWeChatNoString(){
-        return SuperWeChatApplication.getInstance().getString(R.string.userinfo_txt_wechat_no);
+        return LiveApplication.getInstance().getString(R.string.userinfo_txt_wechat_no);
     }
 
     public static String getAddContactPrefixString(){
-        return SuperWeChatApplication.getInstance().getString(R.string.addcontact_send_msg_prefix);
+        return LiveApplication.getInstance().getString(R.string.addcontact_send_msg_prefix);
     }
 }

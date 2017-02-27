@@ -8,18 +8,9 @@ import android.support.v4.app.FragmentActivity;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.User;
 
-import cn.ucai.superwechat.R;
-import cn.ucai.superwechat.ui.AddContactActivity;
-import cn.ucai.superwechat.ui.AddFriendActivity;
-import cn.ucai.superwechat.ui.CenterFragment;
-import cn.ucai.superwechat.ui.ContactInfoActivity;
-import cn.ucai.superwechat.ui.GuideActivity;
-import cn.ucai.superwechat.ui.LoginActivity;
-import cn.ucai.superwechat.ui.MainActivity;
-import cn.ucai.superwechat.ui.RegisterActivity;
-import cn.ucai.superwechat.ui.SettingsActivity;
-import cn.ucai.superwechat.ui.UserProfileActivity;
-import cn.ucai.superwechat.widget.I;
+import cn.ucai.live.I;
+import cn.ucai.live.R;
+import cn.ucai.live.ui.activity.MainActivity;
 
 
 /**
@@ -42,59 +33,7 @@ public class MFGT {
         context.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
 
-    public static void gotoRegisterActivity(Activity context) {
-        startActivity(context, RegisterActivity.class);
-    }
 
-    public static void gotoLoginActivity(Activity context) {
-        startActivity(context, LoginActivity.class);
-    }
-
-    public static void gotoGuideActivity(Activity context) {
-        startActivity(context, GuideActivity.class);
-    }
-
-
-    public static void gotoSettings(FragmentActivity activity) {
-        startActivity(activity, SettingsActivity.class);
-    }
-
-    public static void gotoLoginActivityClear(Activity activity) {
-        startActivity(activity, new Intent(activity, LoginActivity.class).
-                setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-    }
-
-    public static void gotoUserProfile(FragmentActivity activity) {
-        startActivity(activity, UserProfileActivity.class);
-    }
-
-    public static void gotoAddContact(Activity activity) {
-        startActivity(activity, AddContactActivity.class);
-    }
-
-
-    public static void gotoContactInfoActivity(Activity activity, User user) {
-        Intent intent = new Intent(activity, ContactInfoActivity.class);
-        intent.putExtra(I.User.USER_NAME, user);
-        startActivity(activity, intent);
-    }
-
-    public static void gotoContactInfoActivity(Context context, String username) {
-        if (username.equals(EMClient.getInstance().getCurrentUser())) {
-            gotoUserProfile((FragmentActivity) context);
-        } else {
-            Intent intent = new Intent(context, ContactInfoActivity.class);
-            intent.putExtra(I.User.TABLE_NAME, username);
-            startActivity((Activity) context, intent);
-
-        }
-    }
-
-    public static void gotAddFriendActivity(Activity activity, User addU) {
-        Intent intent = new Intent(activity, AddFriendActivity.class);
-        intent.putExtra(I.User.USER_NAME, addU);
-        startActivity(activity, intent);
-    }
 
     public static void gotoMain(Activity activity) {
         startActivity(activity, new Intent(activity, MainActivity.class)

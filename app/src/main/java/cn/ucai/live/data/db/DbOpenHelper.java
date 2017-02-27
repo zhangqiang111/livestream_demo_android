@@ -17,7 +17,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import cn.ucai.superwechat.SuperWeChatHelper;
 
 public class DbOpenHelper extends SQLiteOpenHelper {
 
@@ -38,21 +37,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
             + UserDao.COLUMN_NAME_NICK + " TEXT, "
             + UserDao.COLUMN_NAME_AVATAR + " TEXT, "
             + UserDao.COLUMN_NAME_ID + " TEXT PRIMARY KEY);";
-    private static final String INIVTE_MESSAGE_TABLE_CREATE = "CREATE TABLE "
-            + InviteMessgeDao.TABLE_NAME + " ("
-            + InviteMessgeDao.COLUMN_NAME_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + InviteMessgeDao.COLUMN_NAME_FROM + " TEXT, "
-            + InviteMessgeDao.COLUMN_NAME_GROUP_ID + " TEXT, "
-            + InviteMessgeDao.COLUMN_NAME_GROUP_Name + " TEXT, "
-            + InviteMessgeDao.COLUMN_NAME_REASON + " TEXT, "
-            + InviteMessgeDao.COLUMN_NAME_USERNICK + " TEXT, "
-            + InviteMessgeDao.COLUMN_NAME_AVATARSUFFIX + " TEXT, "
-            + InviteMessgeDao.COLUMN_NAME_UPDATETIME + " TEXT, "
-            + InviteMessgeDao.COLUMN_NAME_STATUS + " INTEGER, "
-            + InviteMessgeDao.COLUMN_NAME_ISINVITEFROMME + " INTEGER, "
-            + InviteMessgeDao.COLUMN_NAME_UNREAD_MSG_COUNT + " INTEGER, "
-            + InviteMessgeDao.COLUMN_NAME_TIME + " TEXT, "
-            + InviteMessgeDao.COLUMN_NAME_GROUPINVITER + " TEXT); ";
+
 
     private static final String ROBOT_TABLE_CREATE = "CREATE TABLE "
             + UserDao.ROBOT_TABLE_NAME + " ("
@@ -77,13 +62,12 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     }
 
     private static String getUserDatabaseName() {
-        return SuperWeChatHelper.getInstance().getCurrentUsernName() + "_demo.db";
+        return "";//LiveHelper.getInstance().getCurrentUsernName() + "_demo.db";
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(USERNAME_TABLE_CREATE);
-        db.execSQL(INIVTE_MESSAGE_TABLE_CREATE);
         db.execSQL(CREATE_PREF_TABLE);
         db.execSQL(ROBOT_TABLE_CREATE);
         db.execSQL(USER_TABLE_CREATE);
@@ -101,14 +85,6 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         }
         if (oldVersion < 4) {
             db.execSQL(ROBOT_TABLE_CREATE);
-        }
-        if (oldVersion < 5) {
-            db.execSQL("ALTER TABLE " + InviteMessgeDao.TABLE_NAME + " ADD COLUMN " +
-                    InviteMessgeDao.COLUMN_NAME_UNREAD_MSG_COUNT + " INTEGER ;");
-        }
-        if (oldVersion < 6) {
-            db.execSQL("ALTER TABLE " + InviteMessgeDao.TABLE_NAME + " ADD COLUMN " +
-                    InviteMessgeDao.COLUMN_NAME_GROUPINVITER + " TEXT;");
         }
     }
 
