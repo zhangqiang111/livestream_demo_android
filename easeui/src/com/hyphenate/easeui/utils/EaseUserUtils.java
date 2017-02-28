@@ -1,6 +1,7 @@
 package com.hyphenate.easeui.utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -54,6 +55,37 @@ public class EaseUserUtils {
             }
         }else{
             Glide.with(context).load(R.drawable.ease_default_avatar).into(imageView);
+        }
+    }
+
+
+    public static void setAppUserAvatar(Context context, String username, ImageView imageView) {
+        User user = getAppUserInfo(username);
+        if (user != null && user.getAvatar() != null) {
+            setAppUserAvatarByPath(context, user.getAvatar(), imageView,null);
+        } else if (username != null) {
+            user = new User(username);
+            setAppUserAvatarByPath(context, user.getAvatar(), imageView,null);
+        } else {
+            Glide.with(context).load(R.drawable.default_hd_avatar).into(imageView);
+        }
+    }
+
+    public static void setAppUserAvatarByPath(Context context, String path, ImageView imageView,String groupId) {
+        int default_avatar = R.drawable.default_hd_avatar;
+        if (groupId!=null){
+            default_avatar = R.drawable.ease_group_icon;
+        }
+        if (path != null) {
+            try {
+                int avatarResId = Integer.parseInt(path);
+                Glide.with(context).load(avatarResId).into(imageView);
+            } catch (Exception e) {
+                //use default avatar
+                Glide.with(context).load(path).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(default_avatar).into(imageView);
+            }
+        } else {
+            Glide.with(context).load(default_avatar).into(imageView);
         }
     }
     

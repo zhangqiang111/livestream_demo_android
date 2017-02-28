@@ -10,6 +10,7 @@ import com.hyphenate.easeui.domain.User;
 
 import cn.ucai.live.I;
 import cn.ucai.live.R;
+import cn.ucai.live.ui.activity.LoginActivity;
 import cn.ucai.live.ui.activity.MainActivity;
 
 
@@ -40,5 +41,10 @@ public class MFGT {
                 .putExtra(I.BACK_MAIN_FROM_CHAT, 1));
 
     }
+    public static void gotoLoginActivityClear(Activity activity) {
+        startActivity(activity, new Intent(activity, LoginActivity.class).
+                setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+    }
+
 }
 
