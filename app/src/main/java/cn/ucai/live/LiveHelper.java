@@ -18,19 +18,15 @@ import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
-import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessage.ChatType;
-import com.hyphenate.chat.EMMessage.Status;
 import com.hyphenate.chat.EMMessage.Type;
 import com.hyphenate.chat.EMOptions;
-import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.controller.EaseUI;
 import com.hyphenate.easeui.controller.EaseUI.EaseEmojiconInfoProvider;
 import com.hyphenate.easeui.controller.EaseUI.EaseSettingsProvider;
 import com.hyphenate.easeui.controller.EaseUI.EaseUserProfileProvider;
 import com.hyphenate.easeui.domain.EaseEmojicon;
-import com.hyphenate.easeui.domain.EaseEmojiconGroupEntity;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.model.EaseAtMessageHelper;
@@ -57,6 +53,8 @@ import cn.ucai.live.utils.ResultUtils;
 
 
 public class LiveHelper {
+
+
     /**
      * data sync listener
      */
@@ -1151,6 +1149,32 @@ public class LiveHelper {
         }
 
         return userContactList;
+    }
+    public void asyncGetCurrentUserInfo(Activity activity) {
+        NetDao.getUserInfoByName(activity, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.e(">>>>",s.toString());
+                if (s!=null){
+                    Result result = ResultUtils.getResultFromJson(s, User.class);
+                    if (result!=null&&result.isRetMsg()){
+                        //保存用户信息到数据库
+                        User user = (User) result.getRetData();
+                        Log.e(">>>>",user.toString());
+                        if (user!=null) {
+                            LiveHelper.getInstance().saveAppContact(user);
+                            PreferenceManager.getInstance().setCurrentUserNick(user.getMUserNick());
+                            PreferenceManager.getInstance().setCurrentUserAvatar(user.getAvatar());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
     }
 
 }
