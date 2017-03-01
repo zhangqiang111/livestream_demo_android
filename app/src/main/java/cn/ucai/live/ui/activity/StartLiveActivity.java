@@ -112,10 +112,10 @@ public class StartLiveActivity extends LiveBaseActivity
 
         EaseUserUtils.setAppUserAvatar(this,EMClient.getInstance().getCurrentUser(),mEivAvatar);
         EaseUserUtils.setUserNick(EMClient.getInstance().getCurrentUser(),usernameView);
-
-        liveId = TestDataRepository.getLiveRoomId(EMClient.getInstance().getCurrentUser());
-        chatroomId = TestDataRepository.getChatRoomId(EMClient.getInstance().getCurrentUser());
-        anchorId = EMClient.getInstance().getCurrentUser();
+//
+//        liveId = TestDataRepository.getLiveRoomId(EMClient.getInstance().getCurrentUser());
+//        chatroomId = TestDataRepository.getChatRoomId(EMClient.getInstance().getCurrentUser());
+//        anchorId = EMClient.getInstance().getCurrentUser();
 //        usernameView.setText(anchorId);
         initEnv();
     }
@@ -204,17 +204,16 @@ public class StartLiveActivity extends LiveBaseActivity
     @OnClick(R.id.btn_start)
     void startLive() {
         //demo为了测试方便，只有指定的账号才能开启直播
+        pd = new ProgressDialog(this);
+        pd.setMessage("创建直播中...");
+        pd.show();
+        createLive();
         if (liveId == null) {
-            String[] anchorIds = TestDataRepository.anchorIds;
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < anchorIds.length; i++) {
-                sb.append(anchorIds[i]);
-                if (i != (anchorIds.length - 1)) sb.append(",");
-            }
-            new EaseAlertDialog(this, "demo中只有" + sb.toString() + "这几个账户才能开启直播").show();
             return;
         }
+    }
 
+    private void startLiveByChatRoom() {
         startContainer.setVisibility(View.INVISIBLE);
         //Utils.hideKeyboard(titleEdit);
         new Thread() {
@@ -417,7 +416,9 @@ public class StartLiveActivity extends LiveBaseActivity
                 if (s != null) {
                     List<String> result = ResultUtils.getEMListResultFromJson(s, String.class);
                     if (result != null && result.size() > 0) {
+                        success = true;
                         initLive(result.get(0));
+                        startLiveByChatRoom();
                     }
                 }
                 if (!success) {
