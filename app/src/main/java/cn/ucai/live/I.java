@@ -3,6 +3,7 @@ package cn.ucai.live;
 public interface I {
 
 	String BACK_MAIN_FROM_CHAT = "back_main_from_chat";
+	String REQUEST_CREATE_CHATROOM = "live/createChatRoom";
 
 	public static interface User {
 		String TABLE_NAME							=		"t_superwechat_user";

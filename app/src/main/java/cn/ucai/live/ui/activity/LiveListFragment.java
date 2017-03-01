@@ -91,7 +91,6 @@ public class LiveListFragment extends Fragment {
         recyclerView = (RecyclerView) getView().findViewById(R.id.recycleview);
         gm = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(gm);
-//        footView = getActivity().getLayoutInflater().inflate(R.layout.em_listview_footer_view,null);
 //        footView = getActivity().getLayoutInflater.(R.layout.em_listview_footer_view, false);
 //        GridLayoutManager glm = (GridLayoutManager) recyclerView.getLayoutManager();
         recyclerView.setHasFixedSize(true);
