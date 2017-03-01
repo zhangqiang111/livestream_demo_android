@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,11 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import cn.ucai.live.data.model.LiveRoom;
-import cn.ucai.live.ui.GridMarginDecoration;
-
 import com.bumptech.glide.Glide;
 import com.hyphenate.EMChatRoomChangeListener;
 import com.hyphenate.chat.EMChatRoom;
@@ -34,20 +30,28 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.exceptions.HyphenateException;
 
-import cn.ucai.live.R;
-import cn.ucai.live.data.TestDataRepository;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cn.ucai.live.R;
+import cn.ucai.live.data.model.LiveRoom;
+import cn.ucai.live.ui.GridMarginDecoration;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class LiveListFragment extends Fragment {
     private static final String TAG = "LiveListFragment";
+    @BindView(R.id.tvrefresh)
+    TextView mTvrefresh;
+    @BindView(R.id.recycleview)
+    RecyclerView mRecycleview;
+    @BindView(R.id.srl)
+    SwipeRefreshLayout mSrl;
 
-//    private ProgressBar pb;
+    //    private ProgressBar pb;
     private ListView listView;
 
     private List<EMChatRoom> chatRoomList;
@@ -68,11 +72,13 @@ public class LiveListFragment extends Fragment {
     LiveAdapter adapter;
     RecyclerView recyclerView;
     GridLayoutManager gm;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_live_list, container, false);
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -81,21 +87,22 @@ public class LiveListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         chatRoomList = new ArrayList<EMChatRoom>();
         rooms = new ArrayList<EMChatRoom>();
-        adapter = new LiveAdapter(getContext(),getLiveRoomList(chatRoomList));
+//        adapter = new LiveAdapter(getContext(), getLiveRoomList(chatRoomList));
         recyclerView = (RecyclerView) getView().findViewById(R.id.recycleview);
-        gm = new GridLayoutManager(getContext(),2);
+        gm = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(gm);
-//        footView = getView().inflate(R.layout.em_listview_footer_view,recyclerView, false);
+//        footView = getActivity().getLayoutInflater().inflate(R.layout.em_listview_footer_view,null);
+//        footView = getActivity().getLayoutInflater.(R.layout.em_listview_footer_view, false);
 //        GridLayoutManager glm = (GridLayoutManager) recyclerView.getLayoutManager();
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new GridMarginDecoration(6));
-        recyclerView.setAdapter(adapter);
+//        recyclerView.setAdapter(adapter);
 //
-//        footLoadingLayout = (LinearLayout) footView.findViewById(R.id.loading_layout);
-//        footLoadingPB = (ProgressBar)footView.findViewById(R.id.loading_bar);
-//        footLoadingText = (TextView) footView.findViewById(R.id.loading_text);
+        footLoadingLayout = (LinearLayout)getView().findViewById(R.id.loading_layout);
+        footLoadingPB = (ProgressBar)getView().findViewById(R.id.loading_bar);
+        footLoadingText = (TextView) getView().findViewById(R.id.loading_text);
 //        listView.addFooterView(footView, null, false);
-//        footLoadingLayout.setVisibility(View.GONE);
+        footLoadingLayout.setVisibility(View.GONE);
 
         loadAndShowData();
         setListener();
@@ -103,6 +110,45 @@ public class LiveListFragment extends Fragment {
 
 
     private void setListener() {
+        setChatRoomListener();
+        setPullUpListener();
+        setPullDownListener();
+    }
+    private void setPullDownListener() {
+        mSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSrl.setRefreshing(true);
+                mTvrefresh.setVisibility(View.VISIBLE);
+                cursor = null;
+                loadAndShowData();
+            }
+        });
+    }
+
+    private void setPullUpListener() {
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    int lasPos = gm.findLastVisibleItemPosition();
+                    if (hasMoreData && !isLoading && lasPos == chatRoomList.size() - 1) {
+                        loadAndShowData();
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int firstPosition = gm.findFirstVisibleItemPosition();
+                mSrl.setEnabled(firstPosition == 0);
+            }
+        });
+    }
+
+    private void setChatRoomListener() {
         EMClient.getInstance().chatroomManager().addChatRoomChangeListener(new EMChatRoomChangeListener() {
             @Override
             public void onChatRoomDestroyed(String s, String s1) {
@@ -137,29 +183,9 @@ public class LiveListFragment extends Fragment {
 
             }
         });
-        setPullUpListener();
     }
-    private void setPullUpListener(){
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE){
-                    if(pageCount != 0){
-                        int lasPos = gm.findLastVisibleItemPosition();
-                        if(hasMoreData && !isLoading && lasPos == listView.getCount()-1){
-                            loadAndShowData();
-                        }
-                    }
-                }
-            }
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
-    }
+
     private void loadAndShowData() {
         new Thread(new Runnable() {
 
@@ -169,23 +195,25 @@ public class LiveListFragment extends Fragment {
                     final EMCursorResult<EMChatRoom> result = EMClient.getInstance().chatroomManager().fetchPublicChatRoomsFromServer(pagesize, cursor);
                     //get chat room list
                     final List<EMChatRoom> chatRooms = result.getData();
-                    Log.e(TAG,"chatRooms"+chatRooms.size());
+                    Log.e(TAG, "chatRooms" + chatRooms.size());
                     getActivity().runOnUiThread(new Runnable() {
 
                         public void run() {
+                            mSrl.setRefreshing(false);
+                            mTvrefresh.setVisibility(View.GONE);
                             chatRoomList.addAll(chatRooms);
-                            if(chatRooms.size() != 0){
+                            if (chatRooms.size() != 0) {
                                 cursor = result.getCursor();
-                                if(chatRooms.size() == pagesize)
+                                if (chatRooms.size() == pagesize);
                                     footLoadingLayout.setVisibility(View.VISIBLE);
                             }
-                            if(isFirstLoading){
+                            if (isFirstLoading) {
 //                                pb.setVisibility(View.INVISIBLE);
                                 isFirstLoading = false;
-                                adapter = new LiveAdapter(getContext(),getLiveRoomList(chatRoomList));
-//                                listView.setAdapter(adapter);
-                            }else{
-                                if(chatRooms.size() < pagesize){
+                                adapter = new LiveAdapter(getContext(), getLiveRoomList(chatRoomList));
+                                recyclerView.setAdapter(adapter);
+                            } else {
+                                if (chatRooms.size() < pagesize) {
                                     hasMoreData = false;
                                     footLoadingLayout.setVisibility(View.VISIBLE);
                                     footLoadingPB.setVisibility(View.GONE);
@@ -201,6 +229,8 @@ public class LiveListFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
                             isLoading = false;
+                            mSrl.setRefreshing(false);
+                            mTvrefresh.setVisibility(View.GONE);
 //                            pb.setVisibility(View.INVISIBLE);
                             footLoadingLayout.setVisibility(View.GONE);
                             Toast.makeText(getContext(), getResources().getString(R.string.failed_to_load_data), Toast.LENGTH_SHORT).show();
@@ -210,12 +240,13 @@ public class LiveListFragment extends Fragment {
             }
         }).start();
     }
+
     /**
      * 生成测试数据
      */
     public static List<LiveRoom> getLiveRoomList(List<EMChatRoom> chatRooms) {
         List<LiveRoom> roomList = new ArrayList<>();
-        for (EMChatRoom room:chatRooms) {
+        for (EMChatRoom room : chatRooms) {
             LiveRoom liveRoom = new LiveRoom();
             liveRoom.setName(room.getName());
             liveRoom.setAudienceNum(room.getAffiliationsCount());
@@ -228,15 +259,17 @@ public class LiveListFragment extends Fragment {
 
         return roomList;
     }
-     class LiveAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
+
+    class LiveAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
 
         private final List<LiveRoom> liveRoomList;
         private final Context context;
 
-        public LiveAdapter(Context context, List<LiveRoom> liveRoomList){
+        public LiveAdapter(Context context, List<LiveRoom> liveRoomList) {
             this.liveRoomList = liveRoomList;
             this.context = context;
         }
+
         @Override
         public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             final PhotoViewHolder holder = new PhotoViewHolder(LayoutInflater.from(context).
@@ -276,7 +309,8 @@ public class LiveListFragment extends Fragment {
         ImageView imageView;
         @BindView(R.id.author)
         TextView anchor;
-        @BindView(R.id.audience_num) TextView audienceNum;
+        @BindView(R.id.audience_num)
+        TextView audienceNum;
 
         public PhotoViewHolder(View itemView) {
             super(itemView);
