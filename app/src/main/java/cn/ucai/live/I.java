@@ -134,7 +134,8 @@ public interface I {
 	int REQUESTCODE_PICK = 1;
 	int REQUESTCODE_CUTTING = 2;
 //	String SERVER_ROOT = "http://120.26.242.249:8080/SuperWeChatServerV2.0/";
-	String SERVER_ROOT = "http://101.251.196.90:8000/SuperWeChatServerV2.0/";
+//	String SERVER_ROOT = "http://101.251.196.90:8000/SuperWeChatServerV2.0/";
+	String SERVER_ROOT = "http://101.251.196.91:8888/SuperWeChatServerV2.0/";
 
 	/** 上传头像图片的类型：user_avatar或group_icon */
 	String AVATAR_TYPE 								= 		"avatarType";

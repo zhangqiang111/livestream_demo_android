@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
@@ -110,14 +111,26 @@ public class StartLiveActivity extends LiveBaseActivity
         setContentView(R.layout.activity_start_live);
         ButterKnife.bind(this);
 
-        EaseUserUtils.setAppUserAvatar(this,EMClient.getInstance().getCurrentUser(),mEivAvatar);
-        EaseUserUtils.setUserNick(EMClient.getInstance().getCurrentUser(),usernameView);
-//
+        EaseUserUtils.setAppUserAvatar(this, EMClient.getInstance().getCurrentUser(), mEivAvatar);
+        EaseUserUtils.setUserNick(EMClient.getInstance().getCurrentUser(), usernameView);
+
+        String id = getIntent().getStringExtra("liveid");
+        initEnv();
+        Log.e(TAG,"id"+id);
+        if (id != null && !id.equals("")) {
+            liveId = id;
+            chatroomId = id;
+        } else {
+            pd = new ProgressDialog(this);
+            pd.setMessage("创建直播中...");
+            pd.show();
+            createLive();
+        }
+
 //        liveId = TestDataRepository.getLiveRoomId(EMClient.getInstance().getCurrentUser());
 //        chatroomId = TestDataRepository.getChatRoomId(EMClient.getInstance().getCurrentUser());
 //        anchorId = EMClient.getInstance().getCurrentUser();
 //        usernameView.setText(anchorId);
-        initEnv();
     }
 
     public void initEnv() {
@@ -204,13 +217,11 @@ public class StartLiveActivity extends LiveBaseActivity
     @OnClick(R.id.btn_start)
     void startLive() {
         //demo为了测试方便，只有指定的账号才能开启直播
-        pd = new ProgressDialog(this);
-        pd.setMessage("创建直播中...");
-        pd.show();
-        createLive();
-        if (liveId == null) {
+        if (liveId == null || liveId.equals("")) {
+            CommonUtils.showShortToast("获取直播数据失败");
             return;
         }
+        startLiveByChatRoom();
     }
 
     private void startLiveByChatRoom() {
@@ -414,37 +425,24 @@ public class StartLiveActivity extends LiveBaseActivity
                 boolean success = false;
                 pd.dismiss();
                 if (s != null) {
-                    List<String> result = ResultUtils.getEMListResultFromJson(s, String.class);
-                    if (result != null && result.size() > 0) {
+                    String id = ResultUtils.getEMListResultFromJson(s);
+                    if (id != null) {
                         success = true;
-                        initLive(result.get(0));
-                        startLiveByChatRoom();
+                        initLive(id);
+//                        startLiveByChatRoom();
                     }
                 }
                 if (!success) {
-                    CommonUtils.showShortToast("创建直播失败");
+                    CommonUtils.showShortToast("创建直播失败.");
                 }
             }
 
             @Override
             public void onError(String error) {
                 pd.dismiss();
-                CommonUtils.showShortToast("创建直播失败");
+                CommonUtils.showShortToast("创建直播失败..");
             }
         });
-    }
-
-    private String getId(String s) {
-        String id = "";
-        try {
-            JSONObject object = new JSONObject(s);
-            JSONObject data = object.getJSONObject("data");
-            id = data.getString("id");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return id;
     }
 
     private void initLive(String id) {

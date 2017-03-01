@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.games.multiplayer.realtime.Room;
 import com.hyphenate.EMChatRoomChangeListener;
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
@@ -97,8 +98,8 @@ public class LiveListFragment extends Fragment {
         recyclerView.addItemDecoration(new GridMarginDecoration(6));
 //        recyclerView.setAdapter(adapter);
 //
-        footLoadingLayout = (LinearLayout)getView().findViewById(R.id.loading_layout);
-        footLoadingPB = (ProgressBar)getView().findViewById(R.id.loading_bar);
+        footLoadingLayout = (LinearLayout) getView().findViewById(R.id.loading_layout);
+        footLoadingPB = (ProgressBar) getView().findViewById(R.id.loading_bar);
         footLoadingText = (TextView) getView().findViewById(R.id.loading_text);
 //        listView.addFooterView(footView, null, false);
         footLoadingLayout.setVisibility(View.GONE);
@@ -113,6 +114,7 @@ public class LiveListFragment extends Fragment {
         setPullUpListener();
         setPullDownListener();
     }
+
     private void setPullDownListener() {
         mSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -203,8 +205,8 @@ public class LiveListFragment extends Fragment {
                             chatRoomList.addAll(chatRooms);
                             if (chatRooms.size() != 0) {
                                 cursor = result.getCursor();
-                                if (chatRooms.size() == pagesize);
-                                    footLoadingLayout.setVisibility(View.VISIBLE);
+                                if (chatRooms.size() == pagesize) ;
+                                footLoadingLayout.setVisibility(View.VISIBLE);
                             }
                             if (isFirstLoading) {
 //                                pb.setVisibility(View.INVISIBLE);
@@ -279,8 +281,15 @@ public class LiveListFragment extends Fragment {
                 public void onClick(View v) {
                     final int position = holder.getAdapterPosition();
                     if (position == RecyclerView.NO_POSITION) return;
-                    context.startActivity(new Intent(context, LiveDetailsActivity.class)
-                            .putExtra("liveroom", liveRoomList.get(position)));
+                    LiveRoom room = liveRoomList.get(position);
+                    Log.e(TAG,"romm"+room.toString());
+                    if (room.getAnchorId().equals(EMClient.getInstance().getCurrentUser())) {
+                        context.startActivity(new Intent(context, StartLiveActivity.class)
+                                .putExtra("liveid", room.getId()));
+                    }else {
+                        context.startActivity(new Intent(context, LiveDetailsActivity.class)
+                                .putExtra("liveroom", liveRoomList.get(position)));
+                    }
                 }
             });
             return holder;
