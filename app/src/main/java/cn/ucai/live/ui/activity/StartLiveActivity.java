@@ -115,18 +115,15 @@ public class StartLiveActivity extends LiveBaseActivity
         EaseUserUtils.setUserNick(EMClient.getInstance().getCurrentUser(), usernameView);
 
         String id = getIntent().getStringExtra("liveid");
-        initEnv();
-        Log.e(TAG,"id"+id);
+
+        Log.e(TAG, "id" + id);
         if (id != null && !id.equals("")) {
             liveId = id;
             chatroomId = id;
         } else {
-            pd = new ProgressDialog(this);
-            pd.setMessage("创建直播中...");
-            pd.show();
-            createLive();
+            liveId = EMClient.getInstance().getCurrentUser();
         }
-
+        initEnv();
 //        liveId = TestDataRepository.getLiveRoomId(EMClient.getInstance().getCurrentUser());
 //        chatroomId = TestDataRepository.getChatRoomId(EMClient.getInstance().getCurrentUser());
 //        anchorId = EMClient.getInstance().getCurrentUser();
@@ -217,11 +214,14 @@ public class StartLiveActivity extends LiveBaseActivity
     @OnClick(R.id.btn_start)
     void startLive() {
         //demo为了测试方便，只有指定的账号才能开启直播
-        if (liveId == null || liveId.equals("")) {
-            CommonUtils.showShortToast("获取直播数据失败");
-            return;
+        if (chatroomId == null || chatroomId.equals("")) {
+            pd = new ProgressDialog(this);
+            pd.setMessage("创建直播中...");
+            pd.show();
+            createLive();
+        } else {
+            startLiveByChatRoom();
         }
-        startLiveByChatRoom();
     }
 
     private void startLiveByChatRoom() {
@@ -256,6 +256,17 @@ public class StartLiveActivity extends LiveBaseActivity
             finish();
             return;
         }
+        NetDao.deleteLive(this, chatroomId, new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String result) {
+
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
         showConfirmCloseLayout();
     }
 
@@ -274,7 +285,7 @@ public class StartLiveActivity extends LiveBaseActivity
     private void showConfirmCloseLayout() {
         //显示封面
         coverImage.setVisibility(View.VISIBLE);
-        EaseUserUtils.setAppUserAvatar(this,EMClient.getInstance().getCurrentUser(),coverImage);
+        EaseUserUtils.setAppUserAvatar(this, EMClient.getInstance().getCurrentUser(), coverImage);
        /* List<LiveRoom> liveRoomList = TestDataRepository.getLiveRoomList();
         for (LiveRoom liveRoom : liveRoomList) {
             if (liveRoom.getId().equals(liveId)) {
@@ -430,7 +441,7 @@ public class StartLiveActivity extends LiveBaseActivity
                     if (id != null) {
                         success = true;
                         initLive(id);
-//                        startLiveByChatRoom();
+                        startLiveByChatRoom();
                     }
                 }
                 if (!success) {
@@ -441,15 +452,13 @@ public class StartLiveActivity extends LiveBaseActivity
             @Override
             public void onError(String error) {
                 pd.dismiss();
-                CommonUtils.showShortToast("创建直播失败.."+error.toString());
+                CommonUtils.showShortToast("创建直播失败.." + error.toString());
             }
         });
     }
 
     private void initLive(String id) {
-        liveId = id;
         chatroomId = id;
-        initEnv();
     }
 
     @Override
