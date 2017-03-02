@@ -218,14 +218,14 @@ public class LiveListFragment extends Fragment {
                                 adapter.initData(getLiveRoomList(chatRoomList));
                                /* adapter = new LiveAdapter(getContext(), getLiveRoomList(chatRoomList));
                                 recyclerView.setAdapter(adapter);*/
-                            } else {
-                                if (chatRooms.size() < pagesize) {
-                                    hasMoreData = false;
-                                    footLoadingLayout.setVisibility(View.VISIBLE);
-                                    footLoadingPB.setVisibility(View.GONE);
-                                    footLoadingText.setText("No more data");
-                                }
-                                adapter.notifyDataSetChanged();
+                            }
+                            adapter.notifyDataSetChanged();
+                            if (chatRooms.size() < pagesize) {
+                                hasMoreData = false;
+                                footLoadingLayout.setVisibility(View.VISIBLE);
+                                footLoadingPB.setVisibility(View.GONE);
+                                Log.e(TAG, "No more data");
+                                footLoadingText.setText("No more data");
                             }
                             isLoading = false;
                         }
@@ -238,7 +238,7 @@ public class LiveListFragment extends Fragment {
                             mSrl.setRefreshing(false);
                             mTvrefresh.setVisibility(View.GONE);
 //                            pb.setVisibility(View.INVISIBLE);
-                            footLoadingLayout.setVisibility(View.GONE);
+//                            footLoadingLayout.setVisibility(View.GONE);
                             Toast.makeText(getContext(), getResources().getString(R.string.failed_to_load_data), Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -268,7 +268,7 @@ public class LiveListFragment extends Fragment {
 
     class LiveAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
 
-        private  List<LiveRoom> liveRoomList;
+        private List<LiveRoom> liveRoomList;
         private final Context context;
 
         public LiveAdapter(Context context, List<LiveRoom> liveRoomList) {
@@ -287,11 +287,11 @@ public class LiveListFragment extends Fragment {
                     final int position = holder.getAdapterPosition();
                     if (position == RecyclerView.NO_POSITION) return;
                     LiveRoom room = liveRoomList.get(position);
-                    Log.e(TAG,"romm"+room.toString());
+                    Log.e(TAG, "romm" + room.toString());
                     if (room.getAnchorId().equals(EMClient.getInstance().getCurrentUser())) {
                         context.startActivity(new Intent(context, StartLiveActivity.class)
                                 .putExtra("liveroom", liveRoomList.get(position)));
-                    }else {
+                    } else {
                         context.startActivity(new Intent(context, LiveDetailsActivity.class)
                                 .putExtra("liveroom", liveRoomList.get(position)));
                     }
@@ -299,6 +299,7 @@ public class LiveListFragment extends Fragment {
             });
             return holder;
         }
+
 
         @Override
         public void onBindViewHolder(PhotoViewHolder holder, int position) {
@@ -316,8 +317,11 @@ public class LiveListFragment extends Fragment {
             return liveRoomList.size();
         }
 
-        public void initData(List<LiveRoom> roomList) {
-            liveRoomList = roomList;
+        public void initData(List<LiveRoom> list) {
+            if (liveRoomList!=null)
+                liveRoomList.clear();
+            liveRoomList.addAll(list);
+            notifyDataSetChanged();
         }
     }
 
