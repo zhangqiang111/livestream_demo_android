@@ -37,6 +37,8 @@ import com.ucloud.live.widget.UAspectFrameLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -94,6 +96,8 @@ public class StartLiveActivity extends LiveBaseActivity
 
     boolean isStarted;
     ProgressDialog pd;
+    long timeBegin;
+    long timeEnd;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -167,6 +171,7 @@ public class StartLiveActivity extends LiveBaseActivity
                 Toast.makeText(this, event.toString(), Toast.LENGTH_LONG).show();
                 break;
             case UEasyStreaming.State.START_RECORDING:
+                timeBegin = System.currentTimeMillis();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -256,6 +261,15 @@ public class StartLiveActivity extends LiveBaseActivity
             finish();
             return;
         }
+        timeEnd = System.currentTimeMillis();
+        long time = timeEnd - timeBegin -8*60*60*1000;
+        SimpleDateFormat mformat = new SimpleDateFormat("HH:MM:SS");
+        String text = mformat.format(new Date(time));
+        deleteLive();
+        showConfirmCloseLayout(text);
+    }
+
+    private void deleteLive() {
         NetDao.deleteLive(this, chatroomId, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String result) {
@@ -267,7 +281,6 @@ public class StartLiveActivity extends LiveBaseActivity
 
             }
         });
-        showConfirmCloseLayout();
     }
 
     @OnClick(R.id.img_bt_switch_voice)
@@ -282,7 +295,7 @@ public class StartLiveActivity extends LiveBaseActivity
         }
     }
 
-    private void showConfirmCloseLayout() {
+    private void showConfirmCloseLayout(String time) {
         //显示封面
         coverImage.setVisibility(View.VISIBLE);
         EaseUserUtils.setAppUserAvatar(this, EMClient.getInstance().getCurrentUser(), coverImage);
@@ -295,6 +308,8 @@ public class StartLiveActivity extends LiveBaseActivity
         View view = liveEndLayout.inflate();
         Button closeConfirmBtn = (Button) view.findViewById(R.id.live_close_confirm);
         TextView usernameView = (TextView) view.findViewById(R.id.tv_username);
+        TextView liveTimeUtilFinish = (TextView) view.findViewById(R.id.liveTime);
+        liveTimeUtilFinish.setText(time);
         usernameView.setText(EMClient.getInstance().getCurrentUser());
         closeConfirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -304,9 +319,6 @@ public class StartLiveActivity extends LiveBaseActivity
         });
     }
 
-    private void confirmClose() {
-
-    }
 
     /**
      * 打开或关闭闪关灯
