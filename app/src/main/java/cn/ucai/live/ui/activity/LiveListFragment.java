@@ -90,7 +90,7 @@ public class LiveListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         chatRoomList = new ArrayList<EMChatRoom>();
         rooms = new ArrayList<EMChatRoom>();
-//        adapter = new LiveAdapter(getContext(), getLiveRoomList(chatRoomList));
+        adapter = new LiveAdapter(getContext(), getLiveRoomList(chatRoomList));
         recyclerView = (RecyclerView) getView().findViewById(R.id.recycleview);
         gm = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(gm);
@@ -98,7 +98,7 @@ public class LiveListFragment extends Fragment {
 //        GridLayoutManager glm = (GridLayoutManager) recyclerView.getLayoutManager();
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new GridMarginDecoration(6));
-//        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
 //
         footLoadingLayout = (LinearLayout) getView().findViewById(R.id.loading_layout);
         footLoadingPB = (ProgressBar) getView().findViewById(R.id.loading_bar);
@@ -215,8 +215,9 @@ public class LiveListFragment extends Fragment {
                             if (isFirstLoading) {
 //                                pb.setVisibility(View.INVISIBLE);
                                 isFirstLoading = false;
-                                adapter = new LiveAdapter(getContext(), getLiveRoomList(chatRoomList));
-                                recyclerView.setAdapter(adapter);
+                                adapter.initData(getLiveRoomList(chatRoomList));
+                               /* adapter = new LiveAdapter(getContext(), getLiveRoomList(chatRoomList));
+                                recyclerView.setAdapter(adapter);*/
                             } else {
                                 if (chatRooms.size() < pagesize) {
                                     hasMoreData = false;
@@ -267,7 +268,7 @@ public class LiveListFragment extends Fragment {
 
     class LiveAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
 
-        private final List<LiveRoom> liveRoomList;
+        private  List<LiveRoom> liveRoomList;
         private final Context context;
 
         public LiveAdapter(Context context, List<LiveRoom> liveRoomList) {
@@ -289,7 +290,7 @@ public class LiveListFragment extends Fragment {
                     Log.e(TAG,"romm"+room.toString());
                     if (room.getAnchorId().equals(EMClient.getInstance().getCurrentUser())) {
                         context.startActivity(new Intent(context, StartLiveActivity.class)
-                                .putExtra("liveid", room.getId()));
+                                .putExtra("liveroom", liveRoomList.get(position)));
                     }else {
                         context.startActivity(new Intent(context, LiveDetailsActivity.class)
                                 .putExtra("liveroom", liveRoomList.get(position)));
@@ -313,6 +314,10 @@ public class LiveListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return liveRoomList.size();
+        }
+
+        public void initData(List<LiveRoom> roomList) {
+            liveRoomList = roomList;
         }
     }
 
