@@ -143,11 +143,12 @@ public class NetDao {
     public static void createLive(Context context, User user,OnCompleteListener<String> listener){
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_CREATE_CHATROOM)
-                .addParam("auth","1TFgE")
-                .addParam("name",user.getMUserNick()+"的直播")
-                .addParam("description",user.getMUserNick()+"的直播")
+                .addParam("auth","1IFgE")
+                .addParam("name",user.getMUserName())
+                .addParam("description",user.getMUserName())
                 .addParam("owner",user.getMUserName())
                 .addParam("maxusers","300")
+                .addParam("members",user.getMUserName())
                 .targetClass(String.class)
                 .execute(listener);
     }
