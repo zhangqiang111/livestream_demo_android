@@ -44,10 +44,12 @@ import java.util.Map;
 
 import cn.ucai.live.bean.Result;
 import cn.ucai.live.data.db.UserDao;
+import cn.ucai.live.data.model.Gift;
 import cn.ucai.live.net.NetDao;
 import cn.ucai.live.net.OnCompleteListener;
 import cn.ucai.live.ui.activity.ChatActivity;
 import cn.ucai.live.ui.activity.MainActivity;
+import cn.ucai.live.utils.L;
 import cn.ucai.live.utils.PreferenceManager;
 import cn.ucai.live.utils.ResultUtils;
 
@@ -117,7 +119,7 @@ public class LiveHelper {
     private LocalBroadcastManager broadcastManager;
 
     private boolean isGroupAndContactListenerRegisted;
-
+    private Map<Integer,Gift> appGiftList;
     private LiveHelper() {
     }
 
@@ -160,9 +162,65 @@ public class LiveHelper {
             setGlobalListeners();
             broadcastManager = LocalBroadcastManager.getInstance(appContext);
             initDbDao();
+            initGiftList();
         }
     }
 
+    private void initGiftList() {
+        NetDao.loadAllGift(appContext, new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                if (s != null) {
+                    Result result = ResultUtils.getListResultFromJson(s, Gift.class);
+                    if (result != null && result.isRetMsg()) {
+                        List<Gift> list = (List<Gift>) result.getRetData();
+                        if (list != null && list.size() > 0) {
+                            L.e(TAG, "gift list=" + list.size());
+                            Map<Integer, Gift> giftlist = new HashMap<>();
+                            for (Gift gift : list) {
+                                giftlist.put(gift.getId(), gift);
+                            }
+                            // save the contact list to cache
+                            getAppGiftList().clear();
+                            getAppGiftList().putAll(giftlist);
+                            // save the contact list to database
+                            UserDao dao = new UserDao(appContext);
+                            List<Gift> gifts = new ArrayList<Gift>(giftlist.values());
+                            dao.saveAppGiftList(gifts);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
+
+    }
+
+    public void setAppGiftList(Map<Integer, Gift> list) {
+        if (list == null) {
+            if (appGiftList != null) {
+                appGiftList.clear();
+            }
+            return;
+        }
+        appGiftList = list;
+    }
+
+    public Map<Integer, Gift> getAppGiftList() {
+        if (appGiftList == null || appGiftList.size() == 0) {
+            appGiftList = demoModel.getAppGiftList();
+        }
+        // return a empty non-null object to avoid app crash
+        if (appGiftList == null) {
+            return new Hashtable<Integer, Gift>();
+        }
+
+        return appGiftList;
+    }
 
     private EMOptions initChatOptions() {
         Log.d(TAG, "init HuanXin Options");
@@ -1150,18 +1208,19 @@ public class LiveHelper {
 
         return userContactList;
     }
+
     public void asyncGetCurrentUserInfo(Activity activity) {
         NetDao.getUserInfoByName(activity, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String s) {
-                Log.e(">>>>",s.toString());
-                if (s!=null){
+                Log.e(">>>>", s.toString());
+                if (s != null) {
                     Result result = ResultUtils.getResultFromJson(s, User.class);
-                    if (result!=null&&result.isRetMsg()){
+                    if (result != null && result.isRetMsg()) {
                         //保存用户信息到数据库
                         User user = (User) result.getRetData();
-                        Log.e(">>>>",user.toString());
-                        if (user!=null) {
+                        Log.e(">>>>", user.toString());
+                        if (user != null) {
                             LiveHelper.getInstance().saveAppContact(user);
                             PreferenceManager.getInstance().setCurrentUserNick(user.getMUserNick());
                             PreferenceManager.getInstance().setCurrentUserAvatar(user.getAvatar());

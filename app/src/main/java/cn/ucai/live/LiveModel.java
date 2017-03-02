@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.ucai.live.data.db.UserDao;
+import cn.ucai.live.data.model.Gift;
 import cn.ucai.live.utils.PreferenceManager;
 
 
@@ -40,7 +41,16 @@ public class LiveModel {
         UserDao dao = new UserDao(context);
         dao.saveContact(user);
     }
-    
+    public boolean saveAppGiftList(List<Gift> giftList) {
+              UserDao dao = new UserDao(context);
+                 dao.saveAppGiftList(giftList);
+                 return true;
+             }
+     
+                 public Map<Integer, Gift> getAppGiftList() {
+                 UserDao dao = new UserDao(context);
+                 return dao.getAppGiftList();
+             }
     /**
      * save current username
      * @param username
@@ -125,7 +135,7 @@ public class LiveModel {
         
         List<String> list = new ArrayList<String>();
         list.addAll(groups);
-        for(int i = 0; i < list.size(); i++){
+        for(int i = 0; i < list.size(); i++  ){
             if(EaseAtMessageHelper.get().getAtMeGroups().contains(list.get(i))){
                 list.remove(i);
                 i--;
