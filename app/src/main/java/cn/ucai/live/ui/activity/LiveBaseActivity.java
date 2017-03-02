@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ucai.live.I;
 import cn.ucai.live.LiveConstants;
 import cn.ucai.live.data.TestAvatarRepository;
 import cn.ucai.live.ui.widget.RoomMessagesView;
@@ -40,6 +42,7 @@ import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
 
@@ -89,7 +92,7 @@ public abstract class LiveBaseActivity extends BaseActivity {
 
     volatile boolean isGiftShowing = false;
     volatile boolean isGift2Showing = false;
-    List<String> toShowList = Collections.synchronizedList(new LinkedList<String>());
+    List<EMMessage> toShowList = Collections.synchronizedList(new LinkedList<EMMessage>());
 
     protected EMChatRoom chatroom;
     List<String> memberList = new ArrayList<>();
@@ -104,23 +107,26 @@ public abstract class LiveBaseActivity extends BaseActivity {
 
     protected abstract void onActivityCreate(@Nullable Bundle savedInstanceState);
 
-    protected synchronized void showLeftGiftVeiw(String name) {
+    protected synchronized void showLeftGiftVeiw(EMMessage message) {
         if (!isGift2Showing) {
-            showGift2Derect(name);
+            showGift2Derect(message);
         } else if (!isGiftShowing) {
-            showGift1Derect(name);
+            showGift1Derect(message);
         } else {
-            toShowList.add(name);
+            toShowList.add(message);
         }
     }
 
-    private void showGift1Derect(final String name) {
+    private void showGift1Derect(final EMMessage message) {
         isGiftShowing = true;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 leftGiftView.setVisibility(View.VISIBLE);
-                leftGiftView.setName(name);
+                String nick = message.getStringAttribute(I.User.NICK, message.getFrom());
+                leftGiftView.setName(nick);
+                Log.e(TAG,"showGift1Derect"+"nick"+nick+" message.getFrom"+message.getFrom());
+                leftGiftView.setAvatar(message.getFrom());
                 leftGiftView.setTranslationY(0);
                 ViewAnimator.animate(leftGiftView)
                         .alpha(0, 1)
@@ -133,7 +139,7 @@ public abstract class LiveBaseActivity extends BaseActivity {
                         .onStop(new AnimationListener.Stop() {
                             @Override
                             public void onStop() {
-                                String pollName = null;
+                                EMMessage pollName = null;
                                 try {
                                     pollName = toShowList.remove(0);
                                 } catch (Exception e) {
@@ -156,13 +162,14 @@ public abstract class LiveBaseActivity extends BaseActivity {
         });
     }
 
-    private void showGift2Derect(final String name) {
+    private void showGift2Derect(final EMMessage message) {
         isGift2Showing = true;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 leftGiftView2.setVisibility(View.VISIBLE);
-                leftGiftView2.setName(name);
+                leftGiftView2.setName(message.getStringAttribute(I.User.NICK, message.getFrom()));
+                leftGiftView2.setAvatar(message.getFrom());
                 leftGiftView2.setTranslationY(0);
                 ViewAnimator.animate(leftGiftView2)
                         .alpha(0, 1)
@@ -175,7 +182,7 @@ public abstract class LiveBaseActivity extends BaseActivity {
                         .onStop(new AnimationListener.Stop() {
                             @Override
                             public void onStop() {
-                                String pollName = null;
+                                EMMessage pollName = null;
                                 try {
                                     pollName = toShowList.remove(0);
                                 } catch (Exception e) {
@@ -288,7 +295,7 @@ public abstract class LiveBaseActivity extends BaseActivity {
         public void onCmdMessageReceived(List<EMMessage> messages) {
             EMMessage message = messages.get(messages.size() - 1);
             if (LiveConstants.CMD_GIFT.equals(((EMCmdMessageBody) message.getBody()).action())) {
-                showLeftGiftVeiw(message.getFrom());
+                showLeftGiftVeiw(message);
             }
         }
 
@@ -480,9 +487,11 @@ public abstract class LiveBaseActivity extends BaseActivity {
         message.setReceipt(chatroomId);
         EMCmdMessageBody cmdMessageBody = new EMCmdMessageBody(LiveConstants.CMD_GIFT);
         message.addBody(cmdMessageBody);
+        message.setAttribute(I.User.NICK,
+                EaseUserUtils.getAppUserInfo(EMClient.getInstance().getCurrentUser()).getMUserNick());
         message.setChatType(EMMessage.ChatType.ChatRoom);
         EMClient.getInstance().chatManager().sendMessage(message);
-        showLeftGiftVeiw(EMClient.getInstance().getCurrentUser());
+        showLeftGiftVeiw(message);
     }
 
     @OnClick(R.id.chat_image)

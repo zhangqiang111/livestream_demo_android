@@ -263,7 +263,7 @@ public class StartLiveActivity extends LiveBaseActivity
         }
         timeEnd = System.currentTimeMillis();
         long time = timeEnd - timeBegin -8*60*60*1000;
-        SimpleDateFormat mformat = new SimpleDateFormat("HH:MM:SS");
+        SimpleDateFormat mformat = new SimpleDateFormat("HH:mm:ss");
         String text = mformat.format(new Date(time));
         deleteLive();
         showConfirmCloseLayout(text);
