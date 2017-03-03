@@ -17,6 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hyphenate.easeui.utils.EaseUserUtils;
@@ -88,15 +89,12 @@ public class RoomGiftListDialog extends DialogFragment {
         });
     }
 
-    private UserDetailsDialogListener dialogListener;
+    private View.OnClickListener mListener;
 
-    public void setUserDetailsDialogListener(UserDetailsDialogListener dialogListener) {
-        this.dialogListener = dialogListener;
+    public void setGiftOnClickListener(View.OnClickListener dialogListener) {
+        this.mListener = dialogListener;
     }
 
-    interface UserDetailsDialogListener {
-        void onMentionClick(String username);
-    }
 
 
     @Override
@@ -144,6 +142,7 @@ public class RoomGiftListDialog extends DialogFragment {
             Gift gift = mGiftList.get(position);
             holder.mTvGiftDes.setText(gift.getGname());
             holder.mTvGiftPrice.setText(String.valueOf(gift.getGprice()));
+            holder.mLayout.setTag(gift.getId());
             EaseUserUtils.setAppUserAvatarByPath(getContext(), gift.getGurl(), holder.mIvGiftIcon, "cn.ucai.live.gift");
         }
 
@@ -159,10 +158,13 @@ public class RoomGiftListDialog extends DialogFragment {
             TextView mTvGiftDes;
             @BindView(R.id.tv_gift_price)
             TextView mTvGiftPrice;
+            @BindView(R.id.ll_gift)
+            LinearLayout mLayout;
 
             GiftViewHolder(View view) {
                 super(view);
                 ButterKnife.bind(this, view);
+                mLayout.setOnClickListener(mListener);
             }
         }
     }
