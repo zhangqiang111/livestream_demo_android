@@ -42,6 +42,7 @@ import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
@@ -273,7 +274,7 @@ public abstract class LiveBaseActivity extends BaseActivity {
                 if (username.equals(chatroomId)) {
                     if (message.getBooleanAttribute(LiveConstants.EXTRA_IS_BARRAGE_MSG, false)) {
                         barrageLayout.addBarrage(((EMTextMessageBody) message.getBody()).getMessage(),
-                                message.getFrom());
+                                message.getFrom(),message.getStringAttribute(I.User.NICK,message.getFrom()));
                     }
                     messageView.refreshSelectLast();
                 } else {
@@ -330,9 +331,11 @@ public abstract class LiveBaseActivity extends BaseActivity {
                     @Override
                     public void onMessageSend(String content) {
                         EMMessage message = EMMessage.createTxtSendMessage(content, chatroomId);
+                        User user = EaseUserUtils.getAppUserInfo(EMClient.getInstance().getCurrentUser());
+                        message.setAttribute(I.User.NICK,user.getMUserNick());
                         if (messageView.isBarrageShow) {
                             message.setAttribute(LiveConstants.EXTRA_IS_BARRAGE_MSG, true);
-                            barrageLayout.addBarrage(content, EMClient.getInstance().getCurrentUser());
+                            barrageLayout.addBarrage(content, EMClient.getInstance().getCurrentUser(),message.getStringAttribute(I.User.NICK,message.getFrom()));
                         }
                         message.setChatType(EMMessage.ChatType.ChatRoom);
                         EMClient.getInstance().chatManager().sendMessage(message);

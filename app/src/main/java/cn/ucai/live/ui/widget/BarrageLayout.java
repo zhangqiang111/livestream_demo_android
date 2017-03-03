@@ -3,6 +3,7 @@ package cn.ucai.live.ui.widget;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +14,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import cn.ucai.live.R;
+
 import com.github.florent37.viewanimator.AnimationBuilder;
 import com.github.florent37.viewanimator.AnimationListener;
 import com.github.florent37.viewanimator.ViewAnimator;
+import com.hyphenate.easeui.utils.EaseUserUtils;
+import com.hyphenate.easeui.widget.EaseImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,15 +51,15 @@ public class BarrageLayout extends LinearLayout {
         init(context, attrs);
     }
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             int what = msg.what;
             final View barrageView = (View) msg.obj;
             System.out.println("what = " + what);
-            if(what == 0){
+            if (what == 0) {
                 container2.addView(barrageView);
-            }else{
+            } else {
                 container1.addView(barrageView);
             }
             barrageView.measure(0, 0);
@@ -79,20 +83,26 @@ public class BarrageLayout extends LinearLayout {
 
     }
 
-    public synchronized void addBarrage(String msgContent, String username) {
+    public synchronized void addBarrage(String msgContent, String username, String usernick) {
         int i = count % 2;
         Message message = handler.obtainMessage();
         message.what = i;
-        message.obj = newBarrageView(msgContent, username);
+        message.obj = newBarrageView(msgContent, username, usernick);
         handler.sendMessage(message);
         count++;
     }
 
-    private View newBarrageView(String msgContent, String username){
+    private View newBarrageView(String msgContent, String username, String usernick) {
         View barrageView = LayoutInflater.from(getContext()).inflate(R.layout.layout_barrage_show, null);
         TextView nameView = (TextView) barrageView.findViewById(R.id.name);
         TextView contentView = (TextView) barrageView.findViewById(R.id.content);
-        nameView.setText(username);
+        EaseImageView avatar = (EaseImageView) barrageView.findViewById(R.id.avatar);
+        EaseUserUtils.setAppUserAvatar(getContext(), username, avatar);
+        if (usernick != null && TextUtils.isEmpty(usernick)) {
+            nameView.setText(usernick);
+        }else {
+            nameView.setText(username);
+        }
         contentView.setText(msgContent);
         return barrageView;
     }
