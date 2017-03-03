@@ -444,6 +444,7 @@ public class StartLiveActivity extends LiveBaseActivity
         NetDao.createLive(this, user, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String s) {
+                Log.e(TAG,"createLive  s"+s.toString());
                 boolean success = false;
                 pd.dismiss();
                 if (s != null) {

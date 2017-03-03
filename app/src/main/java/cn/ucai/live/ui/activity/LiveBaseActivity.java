@@ -125,7 +125,7 @@ public abstract class LiveBaseActivity extends BaseActivity {
                 leftGiftView.setVisibility(View.VISIBLE);
                 String nick = message.getStringAttribute(I.User.NICK, message.getFrom());
                 leftGiftView.setName(nick);
-                Log.e(TAG,"showGift1Derect"+"nick"+nick+" message.getFrom"+message.getFrom());
+                Log.e(TAG, "showGift1Derect" + "nick" + nick + " message.getFrom" + message.getFrom());
                 leftGiftView.setAvatar(message.getFrom());
                 leftGiftView.setTranslationY(0);
                 ViewAnimator.animate(leftGiftView)
@@ -551,11 +551,7 @@ public abstract class LiveBaseActivity extends BaseActivity {
                     showUserDetailsDialog(namelist.get(position));
                 }
             });
-            //暂时使用测试数据
-            Glide.with(context)
-                    .load(avatarRepository.getAvatar())
-                    .placeholder(R.drawable.ease_default_avatar)
-                    .into(holder.Avatar);
+            EaseUserUtils.setAppUserAvatar(context, namelist.get(position), holder.Avatar);
         }
 
         @Override
