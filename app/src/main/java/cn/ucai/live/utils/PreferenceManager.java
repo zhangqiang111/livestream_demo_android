@@ -59,6 +59,8 @@ public class PreferenceManager {
 	private static String SHARED_KEY_CALL_FRONT_CAMERA_RESOLUTION = "SHARED_KEY_FRONT_CAMERA_RESOLUTIOIN";
 	private static String SHARED_KEY_CALL_FIX_SAMPLE_RATE = "SHARED_KEY_CALL_FIX_SAMPLE_RATE";
 
+	private static String SHARED_KEY_PAY_HINT = "shared_key_pay_hint";
+
 	@SuppressLint("CommitPrefEdits")
 	private PreferenceManager(Context cxt) {
 		mSharedPreferences = cxt.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -270,6 +272,14 @@ public class PreferenceManager {
 		editor.remove(SHARED_KEY_CURRENTUSER_NICK);
 		editor.remove(SHARED_KEY_CURRENTUSER_AVATAR);
 		editor.apply();
+	}
+
+	public void setPayHint(boolean hint) {
+		editor.putBoolean(SHARED_KEY_PAY_HINT, hint);
+		editor.apply();
+	}
+	public boolean getPayHint() {
+		return mSharedPreferences.getBoolean(SHARED_KEY_PAY_HINT, false);
 	}
 
 	/**
