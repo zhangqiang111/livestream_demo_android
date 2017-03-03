@@ -73,7 +73,7 @@ public class EaseUserUtils {
 
     public static void setAppUserAvatarByPath(Context context, String path, ImageView imageView,String groupId) {
         int default_avatar = R.drawable.default_hd_avatar;
-        if (groupId!=null){
+        if (groupId!=null&&groupId.equals("cn.ucai.live.gift")){
             default_avatar = R.drawable.ease_group_icon;
         }
         if (path != null) {
