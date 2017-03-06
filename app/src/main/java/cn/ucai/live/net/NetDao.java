@@ -8,6 +8,7 @@ import com.hyphenate.easeui.domain.User;
 import java.io.File;
 
 import cn.ucai.live.I;
+import cn.ucai.live.data.model.GiftStatements;
 import cn.ucai.live.utils.MD5;
 import cn.ucai.live.utils.OkHttpUtils;
 
@@ -170,6 +171,16 @@ public class NetDao {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_LOAD_CHANGE)
                 .addParam("uname",username)
+                .targetClass(String.class)
+                .execute(listener);
+    }
+    public static void giveGifts(Context context,String cname,String anchor,int giftId,int giftNum, OnCompleteListener<String> listener){
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_GIVGING_GIFTS)
+                .addParam("uname",cname)
+                .addParam("anchor",anchor)
+                .addParam("giftId",String.valueOf(giftId))
+                .addParam("giftNum",String.valueOf(giftNum))
                 .targetClass(String.class)
                 .execute(listener);
     }

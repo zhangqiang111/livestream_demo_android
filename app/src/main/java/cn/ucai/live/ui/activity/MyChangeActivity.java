@@ -37,7 +37,7 @@ public class MyChangeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rp_fragment_change);
         ButterKnife.bind(this);
-        loadView = LayoutInflater.from(this).inflate(R.layout.rp_loading, mTargetLayout, false);
+        loadView = LayoutInflater.from(MyChangeActivity.this).inflate(R.layout.rp_loading, mTargetLayout, false);
         mTargetLayout.addView(loadView);
         initData();
     }
