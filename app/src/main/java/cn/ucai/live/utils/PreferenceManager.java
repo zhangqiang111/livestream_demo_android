@@ -389,7 +389,7 @@ public class PreferenceManager {
 		editor.putInt(SHARED_KEY_USER_CHANGE,balance);
 		editor.apply();
     }
-    public int getUserChange(Integer balance) {
+    public int getUserChange() {
 		return mSharedPreferences.getInt(SHARED_KEY_USER_CHANGE,0);
     }
 }

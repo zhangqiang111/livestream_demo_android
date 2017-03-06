@@ -64,4 +64,12 @@
     <item name="android:drawableRight">@drawable/rp_arrow_forward</item>
     <item name="android:drawablePadding">10dp</item>
   </style>
+  <style name="LoadingProgressStyle" parent="@android:style/Widget.ProgressBar">
+    <item name="android:indeterminateDrawable">@drawable/rp_loading_anim</item>
+    <item name="android:indeterminateBehavior">repeat</item>
+    <item name="android:backgroundDimEnabled">true</item>
+    <item name="android:layout_width">@dimen/size84px</item>
+    <item name="android:layout_height">@dimen/size84px</item>
+    <item name="android:indeterminate">false</item>
+  </style>
 </resources>

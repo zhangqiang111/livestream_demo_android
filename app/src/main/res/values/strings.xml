@@ -126,9 +126,9 @@
     <string name="wallet_txt_cards">3张</string>
   <string name="manage_pay_pwd">管理支付密码</string>
   <string name="title_common_problem">常见问题</string>
-  <string name="my_money_records">我的红包记录</string>
+  <string name="my_money_records">收到的礼物</string>
   <string name="my_bank_card">我的银行卡</string>
-  <string name="change_detail">零钱明细</string>
+  <string name="change_detail">充值记录</string>
   <string name="str_withdraw">提现</string>
   <string name="change_recharge">充值</string>
   <string name="rp_str_change_balance">￥-.--</string>

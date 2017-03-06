@@ -51,7 +51,10 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-
+        if (LiveHelper.getInstance().getCurrentUsernName() != null) {
+            mEmailView.setText(LiveHelper.getInstance().getCurrentUsernName());
+            mEmailView.setSelection(LiveHelper.getInstance().getCurrentUsernName().length());
+        }
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -86,6 +89,14 @@ public class LoginActivity extends BaseActivity {
 
     }
 
+   /* @Override
+    protected void onResume() {
+        super.onResume();
+        if (EMClient.getInstance().getCurrentUser() != null) {
+            mEmailView.setText(EMClient.getInstance().getCurrentUser());
+            mEmailView.setSelection(EMClient.getInstance().getCurrentUser().length());
+        }
+    }*/
 
     /**
      * Attempts to sign in or register the account specified by the login form.
