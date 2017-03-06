@@ -6,8 +6,9 @@ public interface I {
 	String REQUEST_CREATE_CHATROOM = "live/createChatRoom";
 	String REQUEST_DELETE_CHATROOM = "live/deleteChatRoom";
 	String REQUEST_LOAD_ALL_GIFT = "live/getAllGifts";
+    String REQUEST_LOAD_CHANGE = "live/getBalance";
 
-	public static interface User {
+    public static interface User {
 		String TABLE_NAME							=		"t_superwechat_user";
 		String USER_NAME 							= 		"m_user_name";					//用户账号
 		String PASSWORD 							= 		"m_user_password";				//用户密码

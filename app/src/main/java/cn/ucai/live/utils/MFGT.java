@@ -12,6 +12,7 @@ import cn.ucai.live.I;
 import cn.ucai.live.R;
 import cn.ucai.live.ui.activity.LoginActivity;
 import cn.ucai.live.ui.activity.MainActivity;
+import cn.ucai.live.ui.activity.MyChangeActivity;
 
 
 /**
@@ -46,5 +47,8 @@ public class MFGT {
                 setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
     }
 
+    public static void gotoChange(Activity activity) {
+        startActivity(activity,MyChangeActivity.class);
+    }
 }
 

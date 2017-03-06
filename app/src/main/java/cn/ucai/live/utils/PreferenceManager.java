@@ -60,6 +60,7 @@ public class PreferenceManager {
 	private static String SHARED_KEY_CALL_FIX_SAMPLE_RATE = "SHARED_KEY_CALL_FIX_SAMPLE_RATE";
 
 	private static String SHARED_KEY_PAY_HINT = "shared_key_pay_hint";
+	private static String SHARED_KEY_USER_CHANGE = "shared_key_user_change";
 
 	@SuppressLint("CommitPrefEdits")
 	private PreferenceManager(Context cxt) {
@@ -384,4 +385,11 @@ public class PreferenceManager {
 		editor.apply();
 	}
 
+    public void setUserChange(Integer balance) {
+		editor.putInt(SHARED_KEY_USER_CHANGE,balance);
+		editor.apply();
+    }
+    public int getUserChange(Integer balance) {
+		return mSharedPreferences.getInt(SHARED_KEY_USER_CHANGE,0);
+    }
 }

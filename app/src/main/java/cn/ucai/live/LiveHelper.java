@@ -45,6 +45,7 @@ import java.util.Map;
 import cn.ucai.live.bean.Result;
 import cn.ucai.live.data.db.UserDao;
 import cn.ucai.live.data.model.Gift;
+import cn.ucai.live.data.model.Wallet;
 import cn.ucai.live.net.NetDao;
 import cn.ucai.live.net.OnCompleteListener;
 import cn.ucai.live.ui.activity.ChatActivity;
@@ -119,7 +120,8 @@ public class LiveHelper {
     private LocalBroadcastManager broadcastManager;
 
     private boolean isGroupAndContactListenerRegisted;
-    private Map<Integer,Gift> appGiftList;
+    private Map<Integer, Gift> appGiftList;
+
     private LiveHelper() {
     }
 
@@ -1232,6 +1234,32 @@ public class LiveHelper {
             @Override
             public void onError(String error) {
 
+            }
+        });
+        NetDao.loadChange(appContext, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.e(">>>>", s.toString());
+                boolean success = false;
+                if (s != null) {
+                    Result result = ResultUtils.getResultFromJson(s, Wallet.class);
+                    if (result != null && result.isRetMsg()) {
+                        //保存用户信息到数据库
+                        Wallet wallet = (Wallet) result.getRetData();
+                        if (wallet != null) {
+                            success = true;
+                            PreferenceManager.getInstance().setUserChange(wallet.getBalance());
+                        }
+                    }
+                }
+                if (!success) {
+                    PreferenceManager.getInstance().setUserChange(0);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                PreferenceManager.getInstance().setUserChange(0);
             }
         });
     }

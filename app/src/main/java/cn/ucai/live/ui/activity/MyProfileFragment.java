@@ -122,4 +122,8 @@ public class MyProfileFragment extends Fragment {
     @OnClick(R.id.iv_avatar)
     public void onClick() {
     }
+    @OnClick(R.id.Layout_Change)
+    public void loadChange() {
+        MFGT.gotoChange(getActivity());
+    }
 }

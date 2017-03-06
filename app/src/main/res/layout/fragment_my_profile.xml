@@ -106,6 +106,25 @@
   </LinearLayout>
 
   <RelativeLayout
+      android:id="@+id/Layout_Change"
+      android:layout_marginTop="10dp"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/item_normal_height"
+      android:background="@drawable/common_white_btn_bg"
+      android:clickable="true"
+      >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/common_black"
+        android:text="我的零钱"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        />
+
+  </RelativeLayout>
+  <RelativeLayout
       android:layout_marginTop="10dp"
       android:layout_width="match_parent"
       android:layout_height="@dimen/item_normal_height"

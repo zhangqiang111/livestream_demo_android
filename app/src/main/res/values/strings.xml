@@ -9,7 +9,6 @@
   <string name="error_invalid_email">用户名不合法</string>
   <string name="error_invalid_password">This password is too short</string>
   <string name="error_field_required">这个字段不能为空</string>
-
   <string name="pref_default_video_frame_rate">15</string>
   <string name="pref_video_frame_rate">framerate</string>
 
@@ -125,6 +124,17 @@
     <string name="wallet_txt_lingqian">零钱</string>
     <string name="wallet_txt_yinhangka">银行卡</string>
     <string name="wallet_txt_cards">3张</string>
+  <string name="manage_pay_pwd">管理支付密码</string>
+  <string name="title_common_problem">常见问题</string>
+  <string name="my_money_records">我的红包记录</string>
+  <string name="my_bank_card">我的银行卡</string>
+  <string name="change_detail">零钱明细</string>
+  <string name="str_withdraw">提现</string>
+  <string name="change_recharge">充值</string>
+  <string name="rp_str_change_balance">￥-.--</string>
+  <string name="str_my_change">我的零钱</string>
+  <string name="verify_identity">验证身份</string>
+  <string name="no_verify">未验证</string>
 
     <!-- 设置 -->
     <string name="setting_txt_usersafe">账号安全</string>

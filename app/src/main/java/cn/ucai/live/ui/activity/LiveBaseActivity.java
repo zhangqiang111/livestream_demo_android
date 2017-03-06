@@ -528,7 +528,6 @@ public abstract class LiveBaseActivity extends BaseActivity {
             builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface d, int which) {
-                    PreferenceManager.getInstance().setPayHint(true);
                     sendGiftMsg(dialog, id);
                 }
             });
